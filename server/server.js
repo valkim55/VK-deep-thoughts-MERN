@@ -6,6 +6,9 @@ const { ApolloServer } = require('apollo-server-express');
 // import typeDefs and resolvers
 const { typeDefs, resolvers } = require('./schemas');
 
+// importing token authentication middleware
+const { authMiddleware } = require('./utils/auth');
+
 const db = require('./config/connection');
 
 const PORT = process.env.PORT || 3001;
@@ -13,7 +16,8 @@ const PORT = process.env.PORT || 3001;
 // create a new Apollo server and pass in the schema data
 const server = new ApolloServer({
     typeDefs, 
-    resolvers 
+    resolvers,
+    context: authMiddleware
 });
 
 const app = express();
@@ -34,7 +38,7 @@ const startApolloServer = async (typeDefs, resolvers) => {
 
           // log where you can go to test gql API
           console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`);
-          
+
         });
     });
 };
